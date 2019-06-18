@@ -11,4 +11,145 @@ Final修饰类中的方法表示该方法不能被改写，可以被继承
 	通过接口可以实现不相关类的相同行为；
 	接口可以实现多继承；同时免除C++中的多继承带来的复杂性
 	接口中只能出现3种成员1.公共的静态常量(public final static )2.公共的抽象方法(public abstract )3.静态内部类(static class)
+输入输出流
+	unicode每个占16Bit 双字节
+	JAVA有三个标准输入输出流：System.in(INputStreamReader类),System.out,System.err
+	写文件 FileWriter writer = new FileWriter(filename)
+	读文件 BufferedReader in = new BufferedReader(new FileReader(filename))
+	键盘输入 BufferedReader in = new BufferedReader(new InputStreamReader(System.in))
+静态的多态性
+	重载（Overloading）
+	一个类中定义了多个同名的方法，它们或有不同的参数或有不同的参数类型，则称为方法的重载。
+动态的多态性
+	覆盖\重写（Overriding）
+	在子类中定义某方法与其父类有相同的名称和参数，就可以这样说此方法被子类重写。
+类成员封装性总结
+	修饰词	同一个类	同一个包	子类	所有类
+	public		1		1			1		1
+	protected	1		1			1
+	default		1		1
+	privite		1
+关键字：abstract:
+	Java允许定义抽象(abstract)的类和方法
+	抽象(abstract)的方法可以只提供方法的头部，但不提供实现的部分
+	抽象(abstract)的方法只能是抽象(abstract)类中的方法
+关键字: static
+	静态的(static)域和静态的(static)方法实际上隶属于类对象。 
+	静态的(static)域
+		示例: System.out
+	静态的(static)方法
+		示例: main( )
+		示例: Math.sqrt( )
+		public static double sqrt(double a)
+关键字: final
+	在Java中，final关键字可以用来修饰类、方法和变量（包括成员变量和局部变量）。
+	当用final作用于类的成员变量时，成员变量（注意是类的成员变量，局部变量只需要保证在使用之前被初始化赋值即可）必须在定义时或者构造器中进行初始化赋值，而且final变量一旦被初始化赋值之后，就不能再被赋值了。
+	使用final修饰方法参数的目的是防止修改这个参数的值，同时也是一种声明和约定，强调这个参数是不可变的。
+接口(interface)
+	接口(interface)就象是一种特殊的类
+	成员方法: abstract
+	成员域: final和static
+	接口(interface)中所有的方法和域必须都是 public的
+	每个接口一般定义在一个.java 文件中
+异常
+	受检异常（Checked Exception）
+		必须在方法声明时通过throws列出
+		在编译时就能被检测出
+	非受检异常（Unchecked Exception）
+		不必在throws列表中
+		错误(Errors) 和运行时异常(RuntimeExceptions)
+进程的含义
+	程序是一组指令的有序集合，本身没有运行的含义，静态的实体；
+	进程是程序在某个数据集上的执行，是一个动态的实体。有其生命周期：创建——调度——运行——等待——完成——消亡
+	在一个程序内部是可以在同一时刻进行多种运算，称为多线程
+龟兔赛跑：
+	class Animal1 extends Thread //线程类
+	{               
+		public Animal1(String name) //构造方法，参数是线程名
+		{          
+		  super(name);
+		}
+		public void run() //线程运行方法
+		{                              
+		  for(int i=0; i<=100; i+=10) {
+			  if (this.getName().equals("乌龟"))
+			  {
+				  System.out.println("\t\t乌龟跑了"+ i + "米");
+			 }    
+			 else 
+			 {
+			  System.out.println(this.getName() + "跑了"+ i + "米");
+			  }
+		   try
+		   {	
+			  Thread.sleep((long)(Math.random()*1000)); 
+		   }    //休眠不超过1秒
+		   catch(InterruptedException e){ }
+		 }
+	}  }
+	class Example1 
+	{                                           //运行主类
+		public static void main(String[] args) 
+		{
+			Animal1 rabbit = new Animal1("兔子");         //线程(对象)1
+			Animal1 tortoise = new Animal1("乌龟");     //线程(对象)2
+			rabbit.start();                                               //启动线程1
+			tortoise.start();                                            //启动线程2
+		}
+	}
+而调用start()方法的话，则是启动一个新线程，等待JVM来调用run()方法体里的内容，所以可能先执行别的代码块而后执行run()方法体。
+Runnable:
+	class Animal2 implements Runnable 
+	{
+		private String name;
+		public Animal2(String name) 
+		{ 
+			this.name = name; 
+		 }
+		public String getName() 
+		{ 
+			return name;	
+		 }
+		public void run() 
+		{                              //线程运行方法
+		 for(int i=0; i<=100; i+=10) 
+		 {
+			if (this.getName().equals("乌龟"))
+			{
+				System.out.println("\t\t乌龟跑了"+ i + "米");
+			}	
+			else 
+			{
+			  System.out.println(this.getName() + "跑了"+ i + "米");
+			  }
+		   try
+		   { 
+			  Thread.sleep((long)(Math.random()*1000)); 
+		   }
+		   catch(InterruptedException e){ }
+	} } }
+	class Example2 
+	{                                           //运行主类
+		public static void main(String[] args) 
+		{
+		Thread rabbit = new Thread(new Animal2("兔子"));
+		Thread tortoise = new Thread(new Animal2("乌龟"));
+		rabbit.start(); 
+		tortoise.start();
+		}
+	}
+创建线程方法：	
+	创建线程方法一
+		创建一个继承Thread的类，并重写Thread中的run方法；
+		在run方法中实现任务处理功能
+		构建该类的对象；
+		调用该对象的start方法；
+	创建线程方法二
+		定义一个实现了Runnable接口的类
+		创建该类对象x；
+		利用x对象构造一个Thread对象
+		Thread t1=New Thread（x);
+		调用该对象的start方法
+
+
 	
